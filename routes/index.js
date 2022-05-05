@@ -8,13 +8,14 @@ router.get('/', function(req, res, next) {
 });
 
 /* E.g. /send?amt=8&desc=Parking%20at%20U%20of%20A&enfa=false */
-router.get('/send', function(req, res, next) {
+router.post('/send', function(req, res, next) {
   console.log("Attempting API call...");
 
-  var user_id = (req.query.enfa === "true" ? process.env.ERIK_ID : process.env.ENFA_ID); //, 
-  sendApiCall(req.query.amt, req.query.desc, user_id);
+  // var user_id = (req.query.enfa === "true" ? process.env.ERIK_ID : process.env.ENFA_ID);
+  console.log(req.body);
+  // sendApiCall(req.query.amt, req.query.desc, user_id);
   
-  res.render('index', { title: "Expense  added" });
+  res.render('index', { title: "Expense  added", body: req.body });
 });
 
 function sendApiCall(amt, desc, user_id) {

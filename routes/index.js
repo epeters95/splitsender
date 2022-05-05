@@ -42,7 +42,7 @@ function sendApiCall(amt, desc, user_id) {
     console.log(`statusMessage: ${res.statusMessage}`);
   });
 
-  new_req.on('error', error => {
+  req.on('error', error => {
     console.error(error);
   });
 

@@ -7,19 +7,22 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: "Expensi" });
 });
 
-/* E.g. /send?amt=8&desc=Parking%20at%20U%20of%20A&enfa=false */
+/* Receive webhook */
 router.post('/send', function(req, res) {
-  console.log("Attempting API call...");
+  var intentStr = req.body.intent.query.toLowerCase();
+  // var user = (intentStr.includes("enfa") === false ? process.env.ERIK_ID : process.env.ENFA_ID);
 
-  // var user_id = (req.query.enfa === "true" ? process.env.ERIK_ID : process.env.ENFA_ID);
-  console.log(req.body);
-  // sendApiCall(req.query.amt, req.query.desc, user_id);
+  var amt = parseFloat(req.body.session.params.amt).toFixed(2);
+  var desc = req.body.session.params.desc.toString();
+
+  sendApiCall(amt, desc);
   
   // res.render('index', { title: "Expense  added", body: req.body });
   res.status(200).end();
 });
 
-function sendApiCall(amt, desc, user_id) {
+function sendApiCall(amt, desc) {
+  console.log("Attempting API call...");
   const bearerStr = 'Bearer ' + process.env.PERSONAL_KEY;
   const data = JSON.stringify({
     cost:          amt,

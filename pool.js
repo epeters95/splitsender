@@ -72,9 +72,9 @@ const createUserToken = (token, userId) => {
   pool.query(
     'INSERT INTO tokens (name, user_id, value) VALUES ($1, $2, $3)', [name, userId, token], (err, result) => {
       if (err) {
-        return handleError(err, res);
+        console.error('Query execution', err.stack);
       }
-      res.redirect('../');;
+      console.log('Successfully created token');
     }
   );
 };

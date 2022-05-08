@@ -49,6 +49,7 @@ const getUserByName = (req, res, username, callback) => {
     if (err) {
       return handleError(err, res);
     }
+    console.log(result);
     var user = result.rows[0];
     callback(user);
   });

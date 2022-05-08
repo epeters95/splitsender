@@ -8,7 +8,6 @@ router.post('/', db.createUser);
 /* Receive auth code */
 router.get('/auth', (req, res) => {
   console.log('Now in auth');
-  console.log(req);
   var rcvdState = req.query.state.toString();
   var username = rcvdState.replace(/[^0-9]+/g, '');
   db.getUserByName(req, res, username, (user) => {

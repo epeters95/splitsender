@@ -18,10 +18,14 @@ const pool = new Pool({
 })
 
 const getUsers = (req, res) => {
-  pool.query('SELECT * FROM users ORDER BY id ASC', (err, result) => {
+  const query = 'SELECT u.name, t.value FROM users u ' +
+                'LEFT JOIN tokens t ON u.id = t.user_id ' +
+                'ORDER BY t.id DESC';
+  pool.query(query, (err, result) => {
     if (err) {
       return handleError(err, res);
     }
+    console.log(result.rows);
     res.render('users', { title: "Add User", users: result.rows });
   });
 };
@@ -62,11 +66,10 @@ const updateUserState = (req, res, state, userId, callback) => {
   );
 };
 
-const createUserToken = (req, res) => {
-  var userId = req.params.id;
+const createUserToken = (res, userId) => {
   var name = "access";
-  var token  = req.body.access_token;
-  console.log('Expires in ' + req.body.expires_in);
+  var token  = res.body.access_token;
+  console.log('Expires in ' + res.body.expires_in);
   pool.query(
     'INSERT INTO tokens (name, user_id, value) VALUES ($1, $2, $3)', [name, userId, token], (err, result) => {
       if (err) {
@@ -106,12 +109,25 @@ const redirectToLogin = (req, res, userId) => {
       var urlParams =
         'response_type=code&' +
         'client_id=' + process.env.CLIENT_ID + '&' +
-        'redirect_uri=' + encodeURIComponent(redirectUri) + '&' +
+        'redirect_uri=' + redirectUri + '&' +
         'state=' + state + '';
       res.redirect('https://secure.splitwise.com/oauth/authorize?' + urlParams);
     } else {
       res.status(500);
     }
+  });
+}
+
+const getUserAuthCode = (req, res, userId) => {
+  const id = parseInt(userId);
+  const name = "access";
+  // Get latest auth code
+  pool.query('SELECT value FROM tokens WHERE user_id = $1 AND name = $2 ORDER BY id DESC LIMIT 1', [id, name], (err, result) => {
+    if (err) {
+      return handleError(err, res);
+    }
+    var user = result.rows[0];
+    callback(user);
   });
 }
 

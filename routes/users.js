@@ -23,14 +23,11 @@ router.get('/:id/auth', (req, res) => {
   });
 });
 
-/* Receive token */
-router.post('/:id/token', db.createUserToken);
-
 /* Utility functions */
 
 const sendAccessTokenRequest = (authCode, userId) => {
   console.log("Attempting to request access token...");
-  const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/' + userId + '/token';
+  const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/' + userId + '/auth';
   const data = JSON.stringify({
     grant_type:    "authorization_code",
     code:          authCode,
@@ -50,8 +47,9 @@ const sendAccessTokenRequest = (authCode, userId) => {
   };
 
   const req = https.request(options, (res) => {
-    console.log(`statusCode: ${res.statusCode}`);
-    console.log(`statusMessage: ${res.statusMessage}`);
+    console.log('res body');
+    console.log(res.body);
+    db.createUserToken(res, userId);
   });
 
   req.on('error', error => {

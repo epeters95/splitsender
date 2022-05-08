@@ -6,6 +6,8 @@ block content
     - if (users.length > 0)
       each item in users
         p=item.name
+          - if (item.value !== null)
+            i  - Authorized
     - else
       p None
   br

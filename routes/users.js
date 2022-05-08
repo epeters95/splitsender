@@ -49,17 +49,13 @@ const sendAccessTokenRequest = (authCode, userId) => {
   };
 
   const req = https.request(options, (res) => {
-    let body = '';
-
     res.setEncoding('utf8');
-    res.on('data', (chunk) => {
-      body += chunk;
-    });
 
-    res.on('end', () => {
+    // Token should come in single chunk
+    res.on('data', (chunk) => {
+      let body = chunk;
       try {
         const data = JSON.parse(body);
-        // write back something interesting to the user:
         var token = data.access_token.toString();
         db.createUserToken(token, userId);
       } catch (err) {

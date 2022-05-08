@@ -88,7 +88,6 @@ const createUser = (req, res) => {
     } else {
       console.log('User ' + username + ' added');
       pool.query('SELECT id FROM users WHERE name = $1', [username], (err2, result2) => {
-        console.log(result2);
         redirectToLogin(req, res, result2.rows[0].id, username);
       })
     }

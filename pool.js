@@ -49,7 +49,6 @@ const getUserByName = (req, res, username, callback) => {
     if (err) {
       return handleError(err, res);
     }
-    console.log(result);
     var user = result.rows[0];
     callback(user);
   });
@@ -67,10 +66,9 @@ const updateUserState = (req, res, state, userId, callback) => {
   );
 };
 
-const createUserToken = (res, userId) => {
+const createUserToken = (token, userId) => {
   var name = "access";
-  var token  = res.swdid.split(';')[0];
-  console.log('Expires in ' + res.body.expires_in);
+  console.log('Creating new user token for ' + userId);
   pool.query(
     'INSERT INTO tokens (name, user_id, value) VALUES ($1, $2, $3)', [name, userId, token], (err, result) => {
       if (err) {
@@ -103,7 +101,6 @@ const redirectToLogin = (req, res, userId, name) => {
   updateUserState(req, res, state, userId, (req, res, result) => {
 
     console.log('Redirecting with result ');
-    console.log(result);
     // Redirect to login
     if (result !== undefined) {
       var redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth/' + userId;

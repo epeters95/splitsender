@@ -16,11 +16,10 @@ router.get('/auth', (req, res) => {
 
     if (user.name + state === rcvdState) {
       sendAccessTokenRequest(req.query.code, user.id);
-      console.log('Sweet!');
       res.redirect('../../adduser');
     }
     else {
-      console.log('Damn it :(');
+      console.log('State not matched.');
       res.redirect('../');
     }
   });
@@ -29,7 +28,7 @@ router.get('/auth', (req, res) => {
 /* Utility functions */
 
 const sendAccessTokenRequest = (authCode, userId) => {
-  console.log("Attempting to request access token...");
+  console.log("Requesting access token...");
   const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth/';
   const data = JSON.stringify({
     grant_type:    "authorization_code",
@@ -50,12 +49,9 @@ const sendAccessTokenRequest = (authCode, userId) => {
   };
 
   const req = https.request(options, (res) => {
-    console.log('res body');
-    // db.createUserToken(res, userId);
-    console.log('Status: ' + res.statusCode);
     res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log('Body: ' + chunk);
+    res.on('data', function (data) {
+      db.createUserToken(data.access_token, userId);
     });
   });
 

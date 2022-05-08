@@ -43,9 +43,9 @@ const getUsers = (req, res) => {
 // 	});
 // };
 
-const getUserById = (req, res, userId, callback) => {
-  const id = parseInt(userId);
-  pool.query('SELECT * FROM users WHERE id = $1', [id], (err, result) => {
+const getUserByName = (req, res, username, callback) => {
+  const name = username.toString();
+  pool.query('SELECT * FROM users WHERE name = $1', [name], (err, result) => {
     if (err) {
       return handleError(err, res);
     }
@@ -90,13 +90,13 @@ const createUser = (req, res) => {
       console.log('User ' + username + ' added');
       pool.query('SELECT id FROM users WHERE name = $1', [username], (err2, result2) => {
         console.log(result2);
-        redirectToLogin(req, res, result2.rows[0].id);
+        redirectToLogin(req, res, result2.rows[0].id, username);
       })
     }
   });
 }
 
-const redirectToLogin = (req, res, userId) => {
+const redirectToLogin = (req, res, userId, name) => {
   // Generate random state, save to db
   var state =  Math.random().toString().substr(2, 8);
   updateUserState(req, res, state, userId, (req, res, result) => {
@@ -110,7 +110,7 @@ const redirectToLogin = (req, res, userId) => {
         'response_type=code&' +
         'client_id=' + process.env.CLIENT_ID + '&' +
         'redirect_uri=' + redirectUri + '&' +
-        'state=' + state + '';
+        'state=' + name + state + '';
       res.redirect('https://secure.splitwise.com/oauth/authorize?' + urlParams);
     } else {
       res.status(500);

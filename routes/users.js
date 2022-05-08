@@ -6,15 +6,15 @@ var db = require('../pool');
 router.post('/', db.createUser);
 
 /* Receive auth code */
-router.post('/auth/:id', (req, res) => {
+router.post('/auth', (req, res) => {
   console.log('Now in auth');
   console.log(req);
-  var userId = 1;//req.params.id;
-  db.getUserById(req, res, req.params.id, (user) => {
+  var rcvdState = req.query.state.toString();
+  var username = rcvdState.replace(/[^0-9]+/g, '');
+  db.getUserByName(req, res, username, (user) => {
     var state = user.state;
-    var rcvdState = req.query.state.toString();
 
-    if (state === rcvdState) {
+    if (user.name + state === rcvdState) {
       sendAccessTokenRequest(req.query.code, user.id);
       console.log('Sweet!');
       res.redirect('../adduser');

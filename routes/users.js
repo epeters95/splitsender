@@ -49,25 +49,24 @@ const sendAccessTokenRequest = (authCode, userId) => {
   };
 
   const req = https.request(options, (res) => {
-    res.setEncoding('utf8');
-    res.on('data', function (data) {
-      console.log("data .................");
-      console.log(data);
-      console.log("access token .........");
-      console.log(data["access_token"]);
-      console.log("what is going on");
-      console.log(data.access_token);
+    let body = '';
 
-      db.createUserToken(data["access_token"], userId);
+    res.setEncoding('utf8');
+    res.on('data', (chunk) => {
+      body += chunk;
+    });
+
+    res.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        // write back something interesting to the user:
+        var token = data.access_token.toString();
+        db.createUserToken(token, userId);
+      } catch (err) {
+        console.log('Error: ' + err.message);
+      }
     });
   });
-
-  req.on('error', error => {
-    console.error(error);
-  });
-
-  req.write(data);
-  req.end();
 }
 
 

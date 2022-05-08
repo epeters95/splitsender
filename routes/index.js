@@ -1,11 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https');
+var db = require('../pool');
 
-/* GET home page. */
+/* GET pages */
 router.get('/', function(req, res, next) {
   res.render('index', { title: "Expensi" });
 });
+
+router.get('/adduser', db.getUsers);
+
 
 /* Receive webhook */
 router.post('/send', function(req, res) {
@@ -15,13 +19,13 @@ router.post('/send', function(req, res) {
   var amt = parseFloat(req.body.session.params.amt).toFixed(2);
   var desc = req.body.session.params.desc.toString();
 
-  sendApiCall(amt, desc);
+  sendApiCallBearer(amt, desc);
   
   // res.render('index', { title: "Expense  added", body: req.body });
   res.status(200).end();
 });
 
-function sendApiCall(amt, desc) {
+function sendApiCallBearer(amt, desc) {
   console.log("Attempting API call...");
   const bearerStr = 'Bearer ' + process.env.PERSONAL_KEY;
   const data = JSON.stringify({
@@ -54,5 +58,7 @@ function sendApiCall(amt, desc) {
   req.write(data);
   req.end();
 };
+
+
 
 module.exports = router;

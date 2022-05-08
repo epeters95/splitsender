@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1 Users
+  .user-list
+    - if (users.length > 0)
+      each item in users
+        p=item.name
+    - else
+      p None
+  br
+  p
+    b Add user
+  form(action="/users", method="post")
+    p Name
+      input(type="text", name="name")
+    p 
+    input(type="submit", value="Log into Splitwise")

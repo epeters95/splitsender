@@ -105,7 +105,7 @@ const redirectToLogin = (req, res, userId) => {
     console.log(result);
     // Redirect to login
     if (result !== undefined) {
-      var redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth';
+      var redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth/' + userId;
       var urlParams =
         'response_type=code&' +
         'client_id=' + process.env.CLIENT_ID + '&' +

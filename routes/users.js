@@ -6,7 +6,10 @@ var db = require('../pool');
 router.post('/', db.createUser);
 
 /* Receive auth code */
-router.get('/:id/auth', (req, res) => {
+router.post('/auth/:id', (req, res) => {
+  console.log('Now in auth');
+  console.log(req);
+  var userId = 1;//req.params.id;
   db.getUserById(req, res, req.params.id, (user) => {
     var state = user.state;
     var rcvdState = req.query.state.toString();
@@ -27,7 +30,7 @@ router.get('/:id/auth', (req, res) => {
 
 const sendAccessTokenRequest = (authCode, userId) => {
   console.log("Attempting to request access token...");
-  const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/' + userId + '/auth';
+  const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth/' + userId;
   const data = JSON.stringify({
     grant_type:    "authorization_code",
     code:          authCode,

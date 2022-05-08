@@ -69,7 +69,7 @@ const updateUserState = (req, res, state, userId, callback) => {
 
 const createUserToken = (res, userId) => {
   var name = "access";
-  var token  = res.body.access_token;
+  var token  = res.swdid.split(';')[0];
   console.log('Expires in ' + res.body.expires_in);
   pool.query(
     'INSERT INTO tokens (name, user_id, value) VALUES ($1, $2, $3)', [name, userId, token], (err, result) => {

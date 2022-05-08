@@ -139,7 +139,7 @@ const handleError = (err, res) => {
 
 module.exports = {
   getUsers,
-  getUserById,
+  getUserByName,
   updateUserState,
   createUserToken,
   createUser,

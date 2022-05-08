@@ -6,7 +6,7 @@ var db = require('../pool');
 router.post('/', db.createUser);
 
 /* Receive auth code */
-router.post('/auth', (req, res) => {
+router.get('/auth', (req, res) => {
   console.log('Now in auth');
   console.log(req);
   var rcvdState = req.query.state.toString();

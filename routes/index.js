@@ -16,10 +16,13 @@ router.post('/send', function(req, res) {
   var intentStr = req.body.intent.query.toLowerCase();
   // var user = (intentStr.includes("enfa") === false ? process.env.ERIK_ID : process.env.ENFA_ID);
 
+  console.log('This is the body');
+  console.log(req.body);
+
   var amt = parseFloat(req.body.session.params.amt).toFixed(2);
   var desc = req.body.session.params.desc.toString();
 
-  sendApiCallBearer(amt, desc);
+  // sendApiCallBearer(amt, desc);
   
   // res.render('index', { title: "Expense  added", body: req.body });
   res.status(200).end();

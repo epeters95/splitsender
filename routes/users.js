@@ -51,11 +51,7 @@ const sendAccessTokenRequest = (authCode, userId) => {
   const req = https.request(options, (res) => {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      console.log("data .................");
       const body = JSON.parse(chunk);
-      console.log(body);
-      console.log("access token .........");
-      console.log(body.access_token);
 
       db.createUserToken(body.access_token, userId);
     });

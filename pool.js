@@ -26,7 +26,6 @@ const getUsers = (req, res) => {
     if (err) {
       return handleError(err, res);
     }
-    console.log(result.rows);
     res.render('users', { title: "Add User", users: result.rows });
   });
 };
@@ -210,18 +209,19 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
   console.log(options);
   console.log("data");
   console.log(data);
-  // const req = https.request(options, res => {
-  //   callback(res);
-  // });
+  if (endpoint !== 'create_expense') {
+    const req = https.request(options, res => {
+      callback(res);
+    });
+    req.on('error', error => {
+      console.error(error);
+    });
 
-  // req.on('error', error => {
-  //   console.error(error);
-  // });
-
-  // if (method === 'POST') {
-  //   req.write(data);
-  // }
-  // req.end();
+    if (method === 'POST') {
+      req.write(data);
+    }
+    req.end();
+  }
 };
 
 module.exports = {

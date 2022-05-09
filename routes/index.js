@@ -17,7 +17,7 @@ router.post('/send', function(req, res) {
 
   var amt = parseFloat(req.body.session.params.amt).toFixed(2);
   var desc = req.body.session.params.desc.toString();
-  var username = req.body.session.params.username.toString().toLowerCase();
+  var username = req.body.session.params.username.toString().toLowerCase().replace('eric', 'erik');
 
   db.getUserByName(req, res, username, (user) => {
 

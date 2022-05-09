@@ -86,7 +86,7 @@ const updateUserState = (req, res, state, userId, callback) => {
   );
 };
 
-const createUserToken = (token, userId) => {
+const createUserToken = (token, userId, callback) => {
   var name = "access";
   console.log('Creating new user token for ' + userId);
   pool.query(
@@ -95,6 +95,7 @@ const createUserToken = (token, userId) => {
         console.error('Query execution', err.stack);
       }
       console.log('Successfully created token');
+      callback();
     }
   );
 };

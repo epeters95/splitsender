@@ -137,6 +137,7 @@ const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
 }
 
 const createUserGroups = (res, userId, groups, callback) => {
+  console.log('creating groups');
   groups.forEach((group, index) => {
     let i = index;
     pool.query(

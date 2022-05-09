@@ -71,7 +71,7 @@ const sendAccessTokenRequest = (authCode, userId) => {
             const body2 = JSON.parse(chunkStr);
             console.log(body2);
             var groups = [];
-            body2.filter(v => v.id !== 0).forEach(group => {
+            body2.groups.filter(v => v.id !== 0).forEach(group => {
               groups.push({id: group.id, name: group.name});
             });
             // Save groups

@@ -116,9 +116,13 @@ const createUser = (req, res) => {
   });
 }
 
-const updateUserGroup = (req, res) => {
-  var userId = req.params.id;
-  var groupId = req.body.group_id;
+const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
+  var userId = userIdArg;
+  var groupId = groupIdArg;
+  if (userId === undefined && groupId === undefined) {
+    userId = req.params.id;
+    groupId = req.body.group_id;
+  }
 
   console.log("Updating user " + userId + ' with group ' + groupId);
 
@@ -127,9 +131,24 @@ const updateUserGroup = (req, res) => {
     if (err) {
       handleError(err, res);
     } else {
-      res.redirect('/' + userId);
+      res.redirect('../');
     }
   });
+}
+
+const createUserGroups = (req, res, userId, groups, callback) => {
+  groups.forEach((group, index) => {
+    let i = index;
+    pool.query(
+      'INSERT INTO groups (id, name, user_id) VALUES ($1, $2, $3)', [group.id, group.name, userId], (err, result) => {
+      if (err) {
+        handleError(err, res);
+      } else if (i === groups.length - 1) {
+        // Last group
+        callback(req, res);
+      }
+    });
+  })
 }
 
 const redirectToLogin = (req, res, userId, name) => {
@@ -214,6 +233,7 @@ module.exports = {
   createUserToken,
   createUser,
   updateUserGroup,
+  createUserGroups,
   getUserAuthCode,
   handleError,
   sendApiCallBearer

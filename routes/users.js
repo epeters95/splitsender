@@ -68,10 +68,18 @@ const sendAccessTokenRequest = (authCode, userId) => {
           });
 
           response.on('end',function(){
-              const body2 = JSON.parse(chunkStr);
-              console.log(body2);
+            const body2 = JSON.parse(chunkStr);
+            console.log(body2);
+            var groups = [];
+            body2.filter(v => v.id !== 0).forEach(group => {
+              groups.push({id: group.id, name: group.name});
+            });
             // Save groups
             // Set user default group
+            db.createUserGroups(req, res, userId, groups, () => {
+              console.log('Groups created, setting default...');
+              db.updateUserGroup(req, res, userId, groups[0].id)
+            });
           });
         });
       });

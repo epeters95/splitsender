@@ -139,7 +139,7 @@ const createUserGroups = (res, userId, groups, callback) => {
         handleError(err, res);
       } else if (i === groups.length - 1) {
         // Last group
-        callback(res);
+        callback(res, result);
       }
     });
   })

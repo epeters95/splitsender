@@ -8,6 +8,7 @@ block content
     input(type="hidden", name="user_id", value="#{user.id}")
     select(name="group_id")
       each group, i in groups
-        option(value=i) #{group.name}
+        - var defaultG = user.default_group_id === group.id
+        option(value=i,selected=defaultG) #{group.name}
     p
       input(type="submit", value="Update user")

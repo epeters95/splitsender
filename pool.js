@@ -43,9 +43,29 @@ const getUsers = (req, res) => {
 // 	});
 // };
 
+const editUser = (req, res) => {
+  const username = req.params.name;
+  getUserByName(req, res, username, (user) => {
+    getUserGroups(req, res, user.id, (groups) => {
+      res.render('edit_user', { groups: groups, user: user });
+    });
+  })
+}
+
+const getUserGroups = (req, res, userId, callback) => {
+  pool.query('SELECT * FROM groups WHERE user_id = $1', [userId], (err, result) => {
+    if (err) {
+      handleError(err, res);
+    } else {
+      callback(result.rows);
+    }
+  });
+}
+
+// Used in GET /users/auth endpoint to get user specified in state
 const getUserByName = (req, res, username, callback) => {
   const name = username.toString();
-  pool.query('SELECT * FROM users WHERE name = $1', [name], (err, result) => {
+  pool.query('SELECT * FROM users WHERE name ILIKE $1', [name], (err, result) => {
     if (err) {
       return handleError(err, res);
     }
@@ -94,6 +114,22 @@ const createUser = (req, res) => {
   });
 }
 
+const updateUserGroup = (req, res) => {
+  var userId = req.params.id;
+  var groupId = req.body.group_id;
+
+  console.log("Updating user " + userId + ' with group ' + groupId);
+
+  pool.query(
+    'UPDATE users SET default_group_id = $1 WHERE id = $2', [groupId, userId], (err, result) => {
+    if (err) {
+      handleError(err, res);
+    } else {
+      res.redirect('/' + userId);
+    }
+  });
+}
+
 const redirectToLogin = (req, res, userId, name) => {
   // Generate random state, save to db
   var state =  Math.random().toString().substr(2, 8);
@@ -115,7 +151,7 @@ const redirectToLogin = (req, res, userId, name) => {
   });
 }
 
-const getUserAuthCode = (req, res, userId) => {
+const getUserAuthCode = (req, res, userId, callback) => {
   const id = parseInt(userId);
   const name = "access";
   // Get latest auth code
@@ -123,22 +159,60 @@ const getUserAuthCode = (req, res, userId) => {
     if (err) {
       return handleError(err, res);
     }
-    var user = result.rows[0];
-    callback(user);
+    var authCode = result.rows[0];
+    callback(authCode);
   });
 }
-
 
 const handleError = (err, res) => {
 	console.error('Query execution', err.stack);
   res.render('error', {error: err, message: "Error"});
 }
 
+const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
+  console.log("Attempting API call...");
+  const bearerStr = 'Bearer ' + bearerKey;
+  
+  var options = {
+    hostname: 'secure.splitwise.com',
+    port: 443,
+    path: '/api/v3.0/' + endpoint + '/',
+    method: method,
+    headers:{
+        'Authorization': bearerStr
+    }
+  };
+  if (method === 'POST') {
+    options.headers = {
+      'Authorization': bearerStr,
+      'Content-Type': 'application/json',
+      'Content-Length': data.length
+    }
+  }
+  const req = https.request(options, res => {
+    callback(res);
+  });
+
+  req.on('error', error => {
+    console.error(error);
+  });
+
+  if (method === 'POST') {
+    req.write(data);
+  }
+  req.end();
+};
+
 module.exports = {
   getUsers,
+  editUser,
   getUserByName,
+  getUserGroups,
   updateUserState,
   createUserToken,
   createUser,
-  handleError
+  updateUserGroup,
+  getUserAuthCode,
+  handleError,
+  sendApiCallBearer
 }

@@ -5,6 +5,10 @@ var db = require('../pool');
 
 router.post('/', db.createUser);
 
+router.post('/:id', db.updateUserGroup);
+
+router.get('/:name', db.editUser);
+
 /* Receive auth code */
 router.get('/auth', (req, res) => {
   console.log('Now in auth');
@@ -48,12 +52,19 @@ const sendAccessTokenRequest = (authCode, userId) => {
     }
   };
 
+  // Send request for Access token
   const req = https.request(options, (res) => {
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
       const body = JSON.parse(chunk);
 
-      db.createUserToken(body.access_token, userId);
+      db.createUserToken(body.access_token, userId, () => {
+        // With access token, get the current user info including groups and save it
+        sendApiCallBearer(authCode, 'get_groups', 'GET', {}, (response) => {
+          console.log("Trying to get some groups");
+          console.log(response);
+        });
+      });
     });
   });
 

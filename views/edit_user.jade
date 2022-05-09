@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h2=user.name
+  br
+  form(action="/users/#{user.id}", method="post")
+    span Default group  
+    select(name="group_id")
+      each group, i in groups
+        option(value=i) #{group}
+    p
+      input(type="submit", value="Update user")

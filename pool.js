@@ -140,7 +140,7 @@ const createUserGroups = (res, userId, groups, callback) => {
   groups.forEach((group, index) => {
     let i = index;
     pool.query(
-      'INSERT INTO groups (id, name, user_id) VALUES ($1, $2, $3)', [group.id, group.name, userId], (err, result) => {
+      'INSERT INTO groups (sw_group_id, name, user_id) VALUES ($1, $2, $3)', [group.id, group.name, userId], (err, result) => {
       if (err) {
         handleError(err, res);
       } else if (i === groups.length - 1) {

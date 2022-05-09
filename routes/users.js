@@ -25,19 +25,18 @@ router.get('/auth', (req, res) => {
     var state = user.state;
 
     if (user.name + state === rcvdState) {
-      sendAccessTokenRequest(req.query.code, user.id);
-      res.redirect('../../adduser');
+      sendAccessTokenRequest(req.query.code, user.id, res);
     }
     else {
       console.log('State not matched.');
-      res.redirect('../');
+      res.redirect('../add_user');
     }
   });
 });
 
 /* Utility functions */
 
-const sendAccessTokenRequest = (authCode, userId) => {
+const sendAccessTokenRequest = (authCode, userId, res) => {
   console.log("Requesting access token...");
   const redirectUri = 'https://shielded-inlet-79241.herokuapp.com/users/auth/';
   const data = JSON.stringify({
@@ -59,9 +58,9 @@ const sendAccessTokenRequest = (authCode, userId) => {
   };
 
   // Send request for Access token
-  const req = https.request(options, (res) => {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
+  const req = https.request(options, (resp) => {
+    resp.setEncoding('utf8');
+    resp.on('data', function (chunk) {
       const body = JSON.parse(chunk);
 
       db.createUserToken(body.access_token, userId, () => {
@@ -75,7 +74,6 @@ const sendAccessTokenRequest = (authCode, userId) => {
 
           response.on('end',function(){
             const body2 = JSON.parse(chunkStr);
-            console.log(body2);
             var groups = [];
             body2.groups.filter(v => v.id !== 0).forEach(group => {
               groups.push({id: group.id, name: group.name});

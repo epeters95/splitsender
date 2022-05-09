@@ -60,7 +60,7 @@ const sendAccessTokenRequest = (authCode, userId) => {
 
       db.createUserToken(body.access_token, userId, () => {
         // With access token, get the current user info including groups and save it
-        sendApiCallBearer(body.access_token, 'get_groups', 'GET', {}, (response) => {
+        db.sendApiCallBearer(body.access_token, 'get_groups', 'GET', {}, (response) => {
           console.log("Trying to get some groups");
           console.log(response);
         });

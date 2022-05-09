@@ -82,11 +82,13 @@ const sendAccessTokenRequest = (authCode, userId) => {
             });
             // Save groups
             // Set user default group
-            db.createUserGroups(res, userId, groups, (res2, result) => {
+            db.createUserGroups(res, userId, groups, (res2) => {
               console.log('Groups created, setting default...');
-              console.log(result);
-              // check how to get the database row ids not this
-              db.updateUserGroup({}, res2, userId, groups[0].id, () => {})
+              db.getUserGroups({}, res, userId, (groupRows) => {
+                db.updateUserGroup({}, res2, userId, groupRows[0].id, () => {
+                  res2.redirect('../');
+                })
+              });
             });
           });
         });

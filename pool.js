@@ -204,6 +204,12 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
       'Content-Length': data.length
     }
   }
+  console.log("*************");
+  console.log("* SENDS REQ *");
+  console.log("*************");
+  console.log(options);
+  console.log("data");
+  console.log(data);
   const req = https.request(options, res => {
     callback(res);
   });

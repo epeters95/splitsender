@@ -5,7 +5,7 @@ var db = require('../pool');
 
 router.post('/', db.createUser);
 
-router.post('/update/:id', db.updateUserGroup);
+router.post('/update', db.updateUserGroup);
 
 router.get('/edit/:name', db.editUser);
 

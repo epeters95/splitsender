@@ -120,7 +120,7 @@ const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
   var userId = userIdArg;
   var groupId = groupIdArg;
   if (userId === undefined && groupId === undefined) {
-    userId = req.params.id;
+    userId = req.body.user_id;
     groupId = req.body.group_id;
   }
 

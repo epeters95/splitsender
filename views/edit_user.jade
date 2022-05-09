@@ -3,8 +3,9 @@ extends layout
 block content
   h2=user.name
   br
-  form(action="/users/update/#{user.id}", method="post")
+  form(action="/users/update", method="post")
     span Default group  
+    input(type="hidden", name="user_id", value="#{user.id}")
     select(name="group_id")
       each group, i in groups
         option(value=i) #{group.name}

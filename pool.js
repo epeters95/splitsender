@@ -136,7 +136,7 @@ const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
   });
 }
 
-const createUserGroups = (req, res, userId, groups, callback) => {
+const createUserGroups = (res, userId, groups, callback) => {
   groups.forEach((group, index) => {
     let i = index;
     pool.query(
@@ -145,7 +145,7 @@ const createUserGroups = (req, res, userId, groups, callback) => {
         handleError(err, res);
       } else if (i === groups.length - 1) {
         // Last group
-        callback(req, res);
+        callback(res);
       }
     });
   })

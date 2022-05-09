@@ -76,9 +76,9 @@ const sendAccessTokenRequest = (authCode, userId) => {
             });
             // Save groups
             // Set user default group
-            db.createUserGroups(req, res, userId, groups, () => {
+            db.createUserGroups(res, userId, groups, (res2) => {
               console.log('Groups created, setting default...');
-              db.updateUserGroup(req, res, userId, groups[0].id)
+              db.updateUserGroup({}, res2, userId, groups[0].id)
             });
           });
         });

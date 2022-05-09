@@ -84,7 +84,7 @@ const sendAccessTokenRequest = (authCode, userId, res) => {
               console.log('Groups created, setting default...');
               db.getUserGroups({}, res, userId, (groupRows) => {
                 db.updateUserGroup({}, res2, userId, groupRows[0].id, () => {
-                  res2.redirect('../');
+                  res2.redirect('../../adduser');
                 })
               });
             });

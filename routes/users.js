@@ -62,7 +62,12 @@ const sendAccessTokenRequest = (authCode, userId) => {
         // With access token, get the current user info including groups and save it
         db.sendApiCallBearer(body.access_token, 'get_groups', 'GET', {}, (response) => {
           console.log("Trying to get some groups");
-          console.log(response);
+          response.on('data', (groupsData) => {
+            const body2 = JSON.parse(groupsData);
+            console.log(body2);
+            // Save groups
+            // Set user default group
+          });
         });
       });
     });

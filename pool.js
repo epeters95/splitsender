@@ -117,7 +117,6 @@ const createUser = (req, res) => {
 }
 
 const updateUserGroup = (req, res, userId, groupId, callback) => {
-  console.log("Updating user " + userId + ' with group ' + groupId);
 
   pool.query(
     'UPDATE users SET default_group_id = $1 WHERE id = $2', [groupId, userId], (err, result) => {

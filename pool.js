@@ -174,7 +174,7 @@ const getUserAuthCode = (req, res, userId, callback) => {
     if (err) {
       return handleError(err, res);
     }
-    var authCode = result.rows[0];
+    var authCode = result.rows[0].value;
     callback(authCode);
   });
 }
@@ -210,18 +210,18 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
   console.log(options);
   console.log("data");
   console.log(data);
-  const req = https.request(options, res => {
-    callback(res);
-  });
+  // const req = https.request(options, res => {
+  //   callback(res);
+  // });
 
-  req.on('error', error => {
-    console.error(error);
-  });
+  // req.on('error', error => {
+  //   console.error(error);
+  // });
 
-  if (method === 'POST') {
-    req.write(data);
-  }
-  req.end();
+  // if (method === 'POST') {
+  //   req.write(data);
+  // }
+  // req.end();
 };
 
 module.exports = {

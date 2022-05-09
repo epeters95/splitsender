@@ -7,7 +7,7 @@ router.post('/', db.createUser);
 
 router.post('/:id', db.updateUserGroup);
 
-router.get('/:name', db.editUser);
+router.get('/edit/:name', db.editUser);
 
 /* Receive auth code */
 router.get('/auth', (req, res) => {

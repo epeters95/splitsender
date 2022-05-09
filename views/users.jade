@@ -5,7 +5,8 @@ block content
   .user-list
     - if (users.length > 0)
       each item in users
-        p=item.name
+        p
+          a(href="/users/edit/#{item.name}")=item.name 
           - if (item.value !== null)
             i  - Authorized
     - else

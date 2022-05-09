@@ -116,16 +116,7 @@ const createUser = (req, res) => {
   });
 }
 
-const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
-  var userId = userIdArg;
-  var groupId = groupIdArg;
-  if (userId === undefined && groupId === undefined) {
-    userId = req.body.user_id;
-    groupId = req.body.group_id;
-  } else {
-    res.redirect = () => {};
-  }
-
+const updateUserGroup = (req, res, userId, groupId, callback) => {
   console.log("Updating user " + userId + ' with group ' + groupId);
 
   pool.query(
@@ -133,8 +124,8 @@ const updateUserGroup = (req, res, userIdArg, groupIdArg) => {
     if (err) {
       handleError(err, res);
     } else {
-      res.redirect('../');
       console.log("Success updating user group");
+      callback();
     }
   });
 }

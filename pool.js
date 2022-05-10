@@ -206,11 +206,15 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
   // if (endpoint !== 'create_expense') {
     // Sends request to Splitwise
     const req = https.request(options, res => {
-      res.setEncoding('utf8');
-      res.on('data', data => {
-        console.log('******** DATA ');
-        console.log(JSON.parse(data));
-      })
+      console.log('****** OPTIONS');
+      console.log(options);
+      if (endpoint !== 'create_expense') {
+        res.setEncoding('utf8');
+        res.on('data', data => {
+          console.log('******** DATA ');
+          console.log(JSON.parse(data));
+        })
+      }
       callback(res);
     });
     req.on('error', error => {

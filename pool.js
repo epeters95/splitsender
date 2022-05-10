@@ -203,9 +203,13 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
       'Content-Length': data.length
     }
   }
-  if (endpoint !== 'create_expense') {
+  // if (endpoint !== 'create_expense') {
     // Sends request to Splitwise
     const req = https.request(options, res => {
+      res.on('data', data => {
+        console.log('******** DATA ');
+        console.log(data);
+      })
       callback(res);
     });
     req.on('error', error => {
@@ -216,10 +220,10 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
       req.write(data);
     }
     req.end();
-  } else {
-    console.log("SENDING REQ **********")
-    console.log(options);
-  }
+  // } else {
+  //   console.log("SENDING REQ **********")
+  //   console.log(options);
+  // }
 };
 
 module.exports = {

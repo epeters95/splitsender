@@ -208,7 +208,7 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
     const req = https.request(options, res => {
       console.log('****** OPTIONS');
       console.log(options);
-      if (endpoint !== 'create_expense') {
+      if (endpoint === 'create_expense') {
         res.setEncoding('utf8');
         res.on('data', data => {
           console.log('******** DATA ');

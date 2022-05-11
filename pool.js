@@ -65,7 +65,7 @@ const getUserGroups = (req, res, userId, callback) => {
 // Used in GET /users/auth endpoint to get user specified in state
 const getUserByName = (req, res, username, callback) => {
   const name = username.toString();
-  pool.query('SELECT u.*, g.sw_group_id AS default_group FROM users u LEFT JOIN groups g ON g.user_id = u.id WHERE u.name ILIKE $1', [name], (err, result) => {
+  pool.query('SELECT u.*, g.sw_group_id AS default_group FROM users u LEFT JOIN groups g ON g.user_id = u.id WHERE u.name ILIKE $1 AND u.default_group_id = g.id', [name], (err, result) => {
     if (err) {
       return handleError(err, res);
     }

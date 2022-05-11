@@ -32,6 +32,8 @@ router.post('/send', function(req, res) {
         group_id:      user.default_group_id,
         split_equally: true
       });
+      console.log("************ DATA ");
+      console.log(data);
       // Get user token
       db.getUserAuthCode(req, res, user.id, (authCode) => {
         db.sendApiCallBearer(authCode, 'create_expense', 'POST', data, (response) => {

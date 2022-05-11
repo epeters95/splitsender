@@ -65,7 +65,7 @@ const getUserGroups = (req, res, userId, callback) => {
 // Used in GET /users/auth endpoint to get user specified in state
 const getUserByName = (req, res, username, callback) => {
   const name = username.toString();
-  pool.query('SELECT * FROM users WHERE name ILIKE $1', [name], (err, result) => {
+  pool.query('SELECT u.*, g.sw_group_id AS default_group FROM users u LEFT JOIN groups g ON g.user_id = u.id WHERE u.name ILIKE $1', [name], (err, result) => {
     if (err) {
       return handleError(err, res);
     }
@@ -203,32 +203,18 @@ const sendApiCallBearer = (bearerKey, endpoint, method, data, callback) => {
       'Content-Length': data.length
     }
   }
-  // if (endpoint !== 'create_expense') {
-    // Sends request to Splitwise
-    const req = https.request(options, res => {
-      console.log('****** OPTIONS');
-      console.log(options);
-      if (endpoint === 'create_expense') {
-        res.setEncoding('utf8');
-        res.on('data', data => {
-          console.log('******** DATA ');
-          console.log(JSON.parse(data));
-        })
-      }
-      callback(res);
-    });
-    req.on('error', error => {
-      console.error(error);
-    });
+  // Sends request to Splitwise
+  const req = https.request(options, res => {
+    callback(res);
+  });
+  req.on('error', error => {
+    console.error(error);
+  });
 
-    if (method === 'POST') {
-      req.write(data);
-    }
-    req.end();
-  // } else {
-  //   console.log("SENDING REQ **********")
-  //   console.log(options);
-  // }
+  if (method === 'POST') {
+    req.write(data);
+  }
+  req.end();
 };
 
 module.exports = {
